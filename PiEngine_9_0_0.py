@@ -1,5 +1,4 @@
 #BY ELLIOT CODLING
-# I am creating a change to the main PiEngine file on github from VScode
 #PiEngine 9.0.0
 class music:
     # volume is what the volume of what it is now
@@ -20,6 +19,9 @@ class music:
     def stop():
         if activate_music:
             pygame.mixer_music.stop()
+
+    def fade_in(initialVolume, targetVolume, wait):
+        pass
 
 #keeps track of the frames that have been passed
 #used for animation
@@ -83,19 +85,20 @@ class properties_object:            #this is to define the properties of a sprit
 
 
 
-#updates text
+#class for defining text
 class properties_text:          #this is to define properties of text
-    def __init__(self, name, text, color, x, y, font_size, snapCentre = False):
+    def __init__(self, name, text, color, x, y, font_size, snapCentre = False, layer=0):
         self.name = name        #define all of the variables
         self.text = text
         
         self.font_size = font_size
         self.color = color  
         self.snapCentre = snapCentre
+        self.layer = layer
         
         font = pygame.font.SysFont(None, font_size)
         texture = font.render(text, True, pygame.Color(color))
-        if snapCentre == True:          #can snap to the centre of the screen, x and y are turned into the width and height
+        if snapCentre == True:          #can snap to the centre of the screen, x and y are turned into the width and height of window
             centre_coords = texture.get_rect(center=(x/2, y/2))
             self.x = centre_coords[0]
             self.y = centre_coords[1]
@@ -104,10 +107,9 @@ class properties_text:          #this is to define properties of text
             self.y = y
         self.texture = texture
 
-    def reload_text(text, color, font_size):            #relaod the texture to text
+    def reload_text(self, text, color, font_size):            #reload the texture to text
         font = pygame.font.SysFont(None, font_size)
-        texture = font.render(text, True, pygame.Color(color))
-        return texture
+        self.texture = font.render(text, True, pygame.Color(color))  
 
 
 #mouse capability
@@ -198,6 +200,21 @@ class window:
         #fill the screen with the color selected
         window.surface.fill(window.color)
 
+        #sort the list from smallest layer value to largest
+        display.sort(key=lambda x: x.layer)
+        #get the texture and find it's x + y
+        if display != None:
+            for object in display:
+                #find the texture
+                texture = object.texture
+
+                #find the coords
+                x = object.x
+                y = object.y
+                
+                window.surface.blit(texture, [x, y])
+
+
         #debug - anything in the display will be highlighted at the start to allow overlap
         #also a frame rate counter will be in the top left showing the current, minimum and maximum fps
         if clock == 0:
@@ -214,7 +231,7 @@ class window:
                 #create the debug rectangle to show where the hitbox is on sprites
             
             #sets the new max and min fps
-            counter.update()
+            counter.updateCounter()
             if frames > 30:
                 if int(clock.get_fps()) < minFPS:
                     minFPS = int(clock.get_fps())
@@ -227,19 +244,7 @@ class window:
             window.surface.blit(properties_text.reload_text(f"max: {maxFPS}", "BLACK", 20), [10, 30])
 
 
-        #sort the list from smallest layer value to largest
-        display.sort(key=lambda x: x.layer)
-        #get the texture and find it's x + y
-        if display != None:
-            for object in display:
-                #find the texture
-                texture = object.texture
-
-                #find the coords
-                x = object.x
-                y = object.y
-                
-                window.surface.blit(texture, [x, y])
+        
 
         #update
         pygame.display.flip()     #update all of the screen
