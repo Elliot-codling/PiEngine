@@ -3,30 +3,20 @@
 class music:
     # volume is what the volume of what it is now
     #end volume is what it will get to
-    def fade_out(volume, end_volume, wait):
-        if activate_music:
-            pre_volume = 0
-            pre_volume += volume
-            for _ in range(int(end_volume * 10), int(volume * 10)):
-                pygame.mixer.music.set_volume(volume)       #set volume of the music
-                volume -= 0.1                   #slowly decrease the music
-                time.sleep(wait)                 #tell it to stop so that it slowly fades out
-
-            pygame.mixer.music.stop()
-            pygame.mixer.music.set_volume(pre_volume)
+    def fade_out(initialVolume, targetVolume, fadeTime):
+        pass
 
     #stop the music only if an audio driver has been detected
     def stop():
-        if activate_music:
-            pygame.mixer_music.stop()
+        pass
 
-    def fade_in(initialVolume, targetVolume, wait):
+    def fade_in(initialVolume, targetVolume, fadeTime):
         pass
 
 #keeps track of the frames that have been passed
 #used for animation
 class counter:  
-    def updateCounter():
+    def update():
         global frames
         frames += 1
 
@@ -34,8 +24,7 @@ class counter:
 #checks if the close button has been pressed as well as updates the current key pressed
 class event:
     def update():
-        global run, keys
-        run = True
+        global keys, run
         keys = pygame.key.get_pressed()
         events = pygame.event.get()
         for event in events:
@@ -231,7 +220,7 @@ class window:
                 #create the debug rectangle to show where the hitbox is on sprites
             
             #sets the new max and min fps
-            counter.updateCounter()
+            counter.update()
             if frames > 30:
                 if int(clock.get_fps()) < minFPS:
                     minFPS = int(clock.get_fps())
