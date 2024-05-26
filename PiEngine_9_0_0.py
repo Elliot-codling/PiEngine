@@ -1,17 +1,67 @@
 #BY ELLIOT CODLING
 #PiEngine 9.0.0
+
+#used for sfx sounds
+class sfx:
+    def __init__(self, soundDirectory, channel):        #laods the song, and adds it to a channel
+        self.sound = pygame.mixer.Sound(soundDirectory)
+        self.channel = channel
+
+    #play sfx sound
+    def playSound(self, playIfBusy=False):
+        #if the playIfBusy is true, then overwrite the channel even if it is busy
+        if pygame.mixer.Channel(self.channel).get_busy() and playIfBusy == False:
+            return
+        pygame.mixer.Channel(self.channel).play(self.sound)
+
+    
+
+#used for music
 class music:
-    # volume is what the volume of what it is now
-    #end volume is what it will get to
-    def fade_out(initialVolume, targetVolume, fadeTime):
-        pass
+    def __init__(self, track, channel=0, loop=False, shuffle=False):
+        #define a track with [], it can have multiple songs
+        #choose a channel to play on
+        #can loop through if the track gets to the end
+        self.track = track
+        self.channel = channel
+        self.loop = loop
+        self.shuffle = shuffle
 
-    #stop the music only if an audio driver has been detected
-    def stop():
-        pass
+        #private
+        if shuffle:
+            self.currentTrack = random.randint(0, len(track) - 1)
+        else:
+            self.currentTrack = 0
 
-    def fade_in(initialVolume, targetVolume, fadeTime):
-        pass
+    #used to go through a whole track
+    def updateLoop(self):
+        if pygame.mixer.Channel(self.channel).get_busy():
+            return
+        if self.loop == False:
+            return
+        pygame.mixer.Channel(self.channel).play(pygame.mixer.Sound(self.track[self.currentTrack]))
+
+        if self.shuffle:
+            self.currentTrack = random.randint(0, len(self.track) - 1)
+
+        elif self.currentTrack + 1 == len(self.track):
+            self.currentTrack = 0
+        else:
+            self.currentTrack += 1
+
+    #used to play just one song on a track
+    def play(self, trackNumber, playIfBusy=False):
+        #if the playIfBusy is true, then overwrite the channel even if it is busy
+        if pygame.mixer.Channel(self.channel).get_busy() and playIfBusy == False:
+            return
+        
+        pygame.mixer.Channel(self.channel).play(pygame.mixer.Sound(self.track[trackNumber]))
+
+    #used to stop the channel playing
+    def stop(self):
+        pygame.mixer.Channel(self.channel).stop()
+
+
 
 #keeps track of the frames that have been passed
 #used for animation
@@ -34,7 +84,7 @@ class event:
 
 #gives basic properties to objects
 class properties_object:            #this is to define the properties of a sprite
-    def __init__(self, name, loaded_texture, x, y, width, height, alpha, layer=0, rotation = 0):
+    def __init__(self, name, loaded_texture, x, y, width, height, alpha=False, layer=0, rotation = 0):
         self.name = name
         self.x = x
         self.y = y
@@ -182,17 +232,16 @@ class window:
 
         input("Enter to exit. ")
         sys.exit()
-
+        
     #update the screen
-    def update(window, display = None, clock = 0, layer = 0):                #update routine
+    def update(window, display = None, debug=[]):                #update routine
         global minFPS, maxFPS
         #fill the screen with the color selected
         window.surface.fill(window.color)
-
-        #sort the list from smallest layer value to largest
-        display.sort(key=lambda x: x.layer)
         #get the texture and find it's x + y
         if display != None:
+             #sort the list from smallest layer value to largest
+            display.sort(key=lambda x: x.layer)
             for object in display:
                 #find the texture
                 texture = object.texture
@@ -203,47 +252,52 @@ class window:
                 
                 window.surface.blit(texture, [x, y])
 
-
         #debug - anything in the display will be highlighted at the start to allow overlap
-        #also a frame rate counter will be in the top left showing the current, minimum and maximum fps
-        if clock == 0:
-            pass
-        elif display != None:
-            for object in display:
-                if object.layer != layer:
-                    continue
+        #also a frame rate counter will be in the top left showing the current, minimum and maximum fps 
+        if debug[0] != None:
+            layer = debug[0]
+            clock = debug[1]
+            color = debug[2]
+
+            if keys[pygame.K_F1]:
+                initDebug()
+            if display != None:
+                for object in display:
+                    if object.layer != layer:
+                        continue
                     
-                x = object.x
-                y = object.y
+                    x = object.x
+                    y = object.y
+                    width = object.width
+                    height = object.height
 
-                pygame.draw.rect(window.surface, (255, 255, 0), pygame.Rect(x, y, object.width, object.height))          
-                #create the debug rectangle to show where the hitbox is on sprites
-            
-            #sets the new max and min fps
-            counter.update()
-            if frames > 30:
-                if int(clock.get_fps()) < minFPS:
-                    minFPS = int(clock.get_fps())
-                if int(clock.get_fps()) > maxFPS:
-                    maxFPS = int(clock.get_fps())
+                    
+                    pygame.draw.rect(window.surface, color, pygame.Rect(x, y, width, height))
 
-            pygame.draw.rect(window.surface, (255, 255, 0), pygame.Rect(0, 0, 75, 50))
-            window.surface.blit(properties_text.reload_text(f"FPS: {int(clock.get_fps())}", "BLACK", 20), [10, 10])
-            window.surface.blit(properties_text.reload_text(f"Min: {minFPS}", "BLACK", 20), [10, 20])
-            window.surface.blit(properties_text.reload_text(f"max: {maxFPS}", "BLACK", 20), [10, 30])
+            if int(clock.get_fps()) < minFPS:
+                minFPS = int(clock.get_fps())
+            if int(clock.get_fps()) > maxFPS:
+                maxFPS = int(clock.get_fps())
 
+            minFpsText.reload_text(f"Min FPS: {minFPS}", color, 20)
+            maxFpsText.reload_text(f"Max FPS: {maxFPS}", color, 20)
+            currentFpsText.reload_text(f"FPS: {int(clock.get_fps())}", color, 20)
 
-        
+            pygame.draw.rect(window.surface, (0, 0, 0), pygame.Rect(minFpsText.x - 10, minFpsText.y - 10, currentFpsText.x + 80, currentFpsText.y + 10))
+            window.surface.blit(minFpsText.texture, [minFpsText.x, minFpsText.y])
+            window.surface.blit(maxFpsText.texture, [maxFpsText.x, maxFpsText.y])
+            window.surface.blit(currentFpsText.texture, [currentFpsText.x, currentFpsText.y])
 
+       
         #update
         pygame.display.flip()     #update all of the screen
 
     #go through the display list
     #remove any items with the selected layer
     def delete_layer(display, layer):
-        for index in range(len(display)):
-            if display[index].layer == layer:
-                del display[index]
+        for object in display:
+            if object.layer == layer:
+                display.remove(object)
 
         return display
 
@@ -319,7 +373,7 @@ class object:
 #try to import pygame, if that is not successful then 
 #help the user to try to install pygame onto their computer
 try:
-    import pygame, time
+    import pygame
     pygame.font.init()
 except ModuleNotFoundError:
     window.pygame_debug()
@@ -337,14 +391,19 @@ except pygame.error:
 
 #used for debugging, sets the min and max frames to be out of bounds so that the comparison will overide the values
 #call frames by engine.frames
-global frames, minFPS, maxFPS
-frames = 0
-minFPS, maxFPS = 1000000000, -1
+def initDebug():
+    global frames, minFPS, maxFPS
+    frames = 0
+    minFPS, maxFPS = 1000000000, -1
+initDebug()
+minFpsText = properties_text("minFPS", "Min FPS: ", "WHITE", 20, 20, 20)
+maxFpsText = properties_text("maxFPS", "Max FPS: ", "WHITE", 20, 35, 20)
+currentFpsText = properties_text("currentFPS", "FPS: ", "WHITE", 20, 50, 20)
 
 #sets the main body while loop to be running, call with engine.run
 global run
 run = True
 
 #finds the current directory of the engine
-import os
+import os, random
 directory = os.getcwd()
