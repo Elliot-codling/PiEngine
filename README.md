@@ -11,8 +11,7 @@ Changes to the preview build:
     - You can define a music object with PiEngine_9_0_0.music()
     - Track requries [], inside will be a directory of the track
     - Choose which channel to play on 
-    - Can be looped through the track indefinitly
-    - If loop is true, the songs can be chosen from randomly
+    - To loop songs, use your (loop object).loop()  Additionally, these songs can be shuffled to randomise the next song
     - PiEngine_9_0_0.music.play() can play a specific song from a track
     - PiEngine_9_0_0.music.stop() will stop the channel from playing
 
@@ -39,6 +38,8 @@ Changes to the preview build:
     - To reset frametime stats, press F1.
 
 - window.delete_layer has been improved. This does not affect its input or output
+
+- Removed Canvas
 
 - Addded PiEngine_9_0_0.initDebug() which will reset the frametime stats
 

@@ -18,33 +18,23 @@ class sfx:
 
 #used for music
 class music:
-    def __init__(self, track, channel=0, loop=False, shuffle=False):
+    def __init__(self, track, channel=0):
         #define a track with [], it can have multiple songs
         #choose a channel to play on
         #can loop through if the track gets to the end
         self.track = track
         self.channel = channel
-        self.loop = loop
-        self.shuffle = shuffle
-
-        #private
-        if shuffle:
-            self.currentTrack = random.randint(0, len(track) - 1)
-        else:
-            self.currentTrack = 0
+        self.currentTrack = 0
 
     #used to go through a whole track
-    def updateLoop(self):
+    def loop(self, shuffle):
         if pygame.mixer.Channel(self.channel).get_busy():
             return
-        if self.loop == False:
-            return
+        if shuffle:
+            self.currentTrack = random.randint(0, len(self.track) - 1)
         pygame.mixer.Channel(self.channel).play(pygame.mixer.Sound(self.track[self.currentTrack]))
 
-        if self.shuffle:
-            self.currentTrack = random.randint(0, len(self.track) - 1)
-
-        elif self.currentTrack + 1 == len(self.track):
+        if self.currentTrack + 1 == len(self.track):
             self.currentTrack = 0
         else:
             self.currentTrack += 1
@@ -234,7 +224,7 @@ class window:
         sys.exit()
         
     #update the screen
-    def update(window, display = None, debug=[]):                #update routine
+    def update(window, display = None, debug=[None]):                #update routine
         global minFPS, maxFPS
         #fill the screen with the color selected
         window.surface.fill(window.color)
