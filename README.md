@@ -17,15 +17,29 @@ Changes to the preview build:
 
 - New event class has been created:
     - Called by PiEngine_9_0_0.event.update()
-    - gets the current keys pressed
+    - Used to get keys that are being pressed
+    - returns events
     - keys can be detected by PiEngine_9_0_0.keys[]
     - updates the events recieved (e.g close button pressed)
     - Called once per clock.tick cycle
     - Can check if the game is still running with PiEngine_9_0_0.run
+    - event.getKeydown() and event.getKeyup() requires the events variable. To check the required key, use pygame.[KEY] (Look at pygame docs for key types)
+    - This returns true if the key specified has been pressed
+
+- object.setAngle() has been modifed so that non-right angles specified work correctly
+
+- object.collision_rect() box_list parameter changed to display
+
+- object.collision_mask() box_list parameter changed to display
+- added collidableLayers[] parameter, that specifies what layers the object provided can collide with
+
+- properties_object() now inherits the object() class
 
 - alpha attrtibute to properties_object() is now default False
 
 - properties_text.reload_text requires self, it does not return a value instead changing texture with self.texture
+
+- boxName parameter in mouse() class has been renamed to objectName
 
 - window.writeDebug_file() has been removed
 

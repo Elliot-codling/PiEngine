@@ -71,9 +71,99 @@ class event:
             if event.type == pygame.QUIT:
                 run = False
 
+        return events
+
+    def getKeydown(events, pygameEvent):
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygameEvent:
+                    return True
+
+    def getKeyUp(events, pygameEvent):
+        for event in events:
+            if event.type == pygame.KEYUP:
+                if event.key == pygameEvent:
+                    return True
+
+#manipulate an object
+class object:
+    def setAngle(self, angle):          #set a specific angle for the object to look in
+        texture = pygame.image.load(self.loaded_texture)
+        self.texture = pygame.transform.rotate(pygame.transform.scale(texture, (self.width, self.height)), angle)             #rotates the object and setss its new angle
+        self.rotation = angle    
+        self.mask = pygame.mask.from_surface(self.texture)    
+
+    def animate(self, animationList, frameWait, flipX = 0, flipY = 0):
+        if frames >= self.animationTime:            #check if it is the right time to change the texture
+            properties_object.reload_texture(self, animationList[self.animationStage], self.width, self.height)            #change the texture of the object
+            self.texture = pygame.transform.flip(self.texture, flipX, flipY)
+            self.animationTime = frames + frameWait         #update when the object should change texture next
+        
+            if self.animationStage == len(animationList) - 1:           #if we are at the end of the list, change the animationStage to 0
+                self.animationStage = 0
+            else:
+                self.animationStage += 1                    #else continue on increasing
+                
+    def collision_rect(self, display, index):     #get the object pos, the collision list and the index to check if collided
+        #check to see if its within the x coord position
+        if not self.x + self.width >= display[index].x:
+            return None
+        elif not self.x <= display[index].x + display[index].width:
+            return None
+        elif not self.y + self.height >= display[index].y:
+            return None
+        elif not self.y <= display[index].y + display[index].height:
+            return None
+        else:
+            #collision has occured
+            return display[index].name
+
+    def collision_mask(self, display, collidableLayers=[]):        #finds objects in the list
+        for object in display:
+            collidable = False
+            for layer in collidableLayers:
+                if object.layer == layer:
+                    collidable = True
+                    break
+
+            if not collidable:
+                continue
+            offsetX = object.x - self.x             #offsets the object by the player position
+            offsetY = object.y - self.y
+            if self.mask.overlap(object.mask, (offsetX, offsetY)) and object.name != self.name:          #checks for overlap
+                return object.name
+
+    def left(self, vel, border):
+        #check if the object x coord is hitting the border - reports true if hit a border
+        if self.x > border:
+            self.x -= vel
+            return False            
+        else:
+            return True
+
+    def right(self, vel, border):
+        if self.x < border:
+            self.x += vel
+            return False
+        else:
+            return True
+
+    def up(self, vel, border):
+        if self.y > border:
+            self.y -= vel
+            return False
+        else:
+            return True 
+
+    def down(self, vel, border):
+        if self.y < border:
+            self.y += vel
+            return False            
+        else:       
+            return True
 
 #gives basic properties to objects
-class properties_object:            #this is to define the properties of a sprite
+class properties_object(object):            #this is to define the properties of a sprite
     def __init__(self, name, loaded_texture, x, y, width, height, alpha=False, layer=0, rotation = 0):
         self.name = name
         self.x = x
@@ -143,7 +233,7 @@ class properties_text:          #this is to define properties of text
 
 #mouse capability
 class mouse():          
-    def collision(boxName, display, mouseX = 0, mouseY = 0):
+    def collision(objectName, display, mouseX = 0, mouseY = 0):
         if mouseX == 0 or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
@@ -151,14 +241,14 @@ class mouse():
         #if yes then returns true
         #else returns false
         x, y = None, None
-        #find the name of the box/sprite
-        for sprite in display:
-            if sprite.name == boxName:
+        #find the name of the object
+        for object in display:
+            if object.name == objectName:
                 #find coords of sprite
-                x = sprite.x
-                y = sprite.y
-                width = sprite.width
-                height = sprite.height
+                x = object.x
+                y = object.y
+                width = object.width
+                height = object.height
         #return false if no x or y coord is found
         if x == None and y == None:
             return False
@@ -258,10 +348,9 @@ class window:
                     
                     x = object.x
                     y = object.y
-                    width = object.width
-                    height = object.height
+                    width = object.texture.get_width()
+                    height = object.texture.get_height()
 
-                    
                     pygame.draw.rect(window.surface, color, pygame.Rect(x, y, width, height))
 
             if int(clock.get_fps()) < minFPS:
@@ -290,75 +379,6 @@ class window:
                 display.remove(object)
 
         return display
-
-
-
-#manipulate an object
-class object:
-    def setAngle(self, angle):          #set a specific angle for the object to look in
-        self.texture = pygame.transform.rotate(self.texture, self.rotation - angle)             #rotates the object and setss its new angle
-        self.rotation = angle   #sets the current new angle for the object
-
-    def animate(self, animationList, frameWait, flipX = 0, flipY = 0):
-        if frames >= self.animationTime:            #check if it is the right time to change the texture
-            properties_object.reload_texture(self, animationList[self.animationStage], self.width, self.height)            #change the texture of the object
-            self.texture = pygame.transform.flip(self.texture, flipX, flipY)
-            self.animationTime = frames + frameWait         #update when the object should change texture next
-        
-            if self.animationStage == len(animationList) - 1:           #if we are at the end of the list, change the animationStage to 0
-                self.animationStage = 0
-            else:
-                self.animationStage += 1                    #else continue on increasing
-                
-    def collision_rect(self, box_list, index):     #get the object pos, the collision list and the index to check if collided
-        #check to see if its within the x coord position
-        if not self.x + self.width >= box_list[index].x:
-            return None
-        elif not self.x <= box_list[index].x + box_list[index].width:
-            return None
-        elif not self.y + self.height >= box_list[index].y:
-            return None
-        elif not self.y <= box_list[index].y + box_list[index].height:
-            return None
-        else:
-            #collision has occured
-            return box_list[index].name
-
-    def collision_mask(self, box_list):        #finds objects in the list
-        for object in box_list:
-            offsetX = object.x - self.x             #offsets the object by the player position
-            offsetY = object.y - self.y
-            if self.mask.overlap(object.mask, (offsetX, offsetY)) and object.name != self.name:          #checks for overlap
-                return object.name
-
-    def left(object, vel, border):
-        #check if the object x coord is hitting the border - reports true if hit a border
-        if object.x > border:
-            object.x -= vel
-            return False            
-        else:
-            return True
-
-    def right(object, vel, border):
-        if object.x < border:
-            object.x += vel
-            return False
-        else:
-            return True
-
-    def up(object, vel, border):
-        if object.y > border:
-            object.y -= vel
-            return False
-        else:
-            return True 
-
-    def down(object, vel, border):
-        if object.y < border:
-            object.y += vel
-            return False            
-        else:       
-            return True
 
 #try to import pygame, if that is not successful then 
 #help the user to try to install pygame onto their computer
