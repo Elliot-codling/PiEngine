@@ -303,7 +303,7 @@ class window:
             print("")
             print("Open Terminal")
             print("")
-            print("Type: pip3 install pygame")
+            print("Type: sudo apt install python3-pygame")
             print("IF PIP IS NOT RECOGNISED / INSTALLED:")
             print("")
             print("Type 1: sudo apt install python3-pip")
