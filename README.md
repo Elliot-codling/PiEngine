@@ -2,27 +2,27 @@ Changes to the preview build:
 
 - Added SFX class
     - Used for sounds such as walking, jumping etc
-    - Define by PiEngine_9_0_0.sfx()
+    - Define by PiEngine_8_0_0.sfx()
     - Choose the file location of the sound
     - Choose which channel the sound will be played on
-    - PiEngine_9_0_0.sfx.playSound() will play the sound
+    - PiEngine_8_0_0.sfx.playSound() will play the sound
 
 - Music class has been modified to use pygame.mixer.channel
-    - You can define a music object with PiEngine_9_0_0.music()
+    - You can define a music object with PiEngine_8_0_0.music()
     - Track requries [], inside will be a directory of the track
     - Choose which channel to play on 
     - To loop songs, use your (loop object).loop()  Additionally, these songs can be shuffled to randomise the next song
-    - PiEngine_9_0_0.music.play() can play a specific song from a track
-    - PiEngine_9_0_0.music.stop() will stop the channel from playing
+    - PiEngine_8_0_0.music.play() can play a specific song from a track
+    - PiEngine_8_0_0.music.stop() will stop the channel from playing
 
 - New event class has been created:
-    - Called by PiEngine_9_0_0.event.update()
+    - Called by PiEngine_8_0_0.event.update()
     - Used to get keys that are being pressed
     - returns events
-    - keys can be detected by PiEngine_9_0_0.keys[]
+    - keys can be detected by PiEngine_8_0_0.keys[]
     - updates the events recieved (e.g close button pressed)
     - Called once per clock.tick cycle
-    - Can check if the game is still running with PiEngine_9_0_0.run
+    - Can check if the game is still running with PiEngine_8_0_0.run
     - event.getKeydown() and event.getKeyup() requires the events variable. To check the required key, use pygame.[KEY] (Look at pygame docs for key types)
     - This returns true if the key specified has been pressed
 
@@ -55,8 +55,8 @@ Changes to the preview build:
 
 - Removed Canvas
 
-- Addded PiEngine_9_0_0.initDebug() which will reset the frametime stats
+- Addded PiEngine_8_0_0.initDebug() which will reset the frametime stats
 
 - Removed import time
 
-- Added PiEngine_9_0_0.directory to get the current directory of the code execution
+- Added PiEngine_8_0_0.directory to get the current directory of the code execution
