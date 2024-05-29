@@ -116,7 +116,7 @@ class object:
             return None
         else:
             #collision has occured
-            return display[index].name
+            return display[index].id
 
     def collision_mask(self, display, collidableLayers=[]):        #finds objects in the list
         for object in display:
@@ -130,8 +130,8 @@ class object:
                 continue
             offsetX = object.x - self.x             #offsets the object by the player position
             offsetY = object.y - self.y
-            if self.mask.overlap(object.mask, (offsetX, offsetY)) and object.name != self.name:          #checks for overlap
-                return object.name
+            if self.mask.overlap(object.mask, (offsetX, offsetY)) and object.id != self.id:          #checks for overlap
+                return object.id
 
     def left(self, vel, border):
         #check if the object x coord is hitting the border - reports true if hit a border
@@ -164,8 +164,8 @@ class object:
 
 #gives basic properties to objects
 class properties_object(object):            #this is to define the properties of a sprite
-    def __init__(self, name, loaded_texture, x, y, width, height, alpha=False, layer=0, rotation = 0):
-        self.name = name
+    def __init__(self, id, loaded_texture, x, y, width, height, alpha=False, layer=0, rotation = 0):
+        self.id = id
         self.x = x
         self.y = y
         self.width = width
@@ -206,8 +206,8 @@ class properties_object(object):            #this is to define the properties of
 
 #class for defining text
 class properties_text:          #this is to define properties of text
-    def __init__(self, name, text, color, x, y, font_size, snapCentre = False, layer=0):
-        self.name = name        #define all of the variables
+    def __init__(self, id, text, color, x, y, font_size, snapCentre = False, layer=0):
+        self.id = id        #define all of the variables
         self.text = text
         
         self.font_size = font_size
@@ -233,17 +233,17 @@ class properties_text:          #this is to define properties of text
 
 #mouse capability
 class mouse():          
-    def collision(objectName, display, mouseX = 0, mouseY = 0):
+    def collision(objectId, display, mouseX = 0, mouseY = 0):
         if mouseX == 0 or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
-            #gets the mouse positions and checks to see if it hits a box with a given name
+            #gets the mouse positions and checks to see if it hits a box with a given id
         #if yes then returns true
         #else returns false
         x, y = None, None
-        #find the name of the object
+        #find the id of the object
         for object in display:
-            if object.name == objectName:
+            if object.id == objectId:
                 #find coords of sprite
                 x = object.x
                 y = object.y

@@ -39,6 +39,7 @@ Changes to the preview build:
 
 - properties_text.reload_text requires self, it does not return a value instead changing texture with self.texture
 
+- objectname parameter in mouse() class has been renamed to objectId
 - boxName parameter in mouse() class has been renamed to objectName
 
 - window.writeDebug_file() has been removed
