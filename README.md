@@ -11,7 +11,7 @@ Changes to the preview build:
     - You can define a music object with PiEngine_8_0_0.music()
     - Track requries [], inside will be a directory of the track
     - Choose which channel to play on 
-    - To loop songs, use your (loop object).loop()  Additionally, these songs can be shuffled to randomise the next song
+    - To loop songs, use your [loop object].loop()  Additionally, these songs can be shuffled to randomise the next song
     - PiEngine_8_0_0.music.play() can play a specific song from a track
     - PiEngine_8_0_0.music.stop() will stop the channel from playing
 
@@ -33,9 +33,15 @@ Changes to the preview build:
 - object.collision_mask() box_list parameter changed to display
 - added collidableLayers[] parameter, that specifies what layers the object provided can collide with
 
+- Removed canvas offset values from [left, right, up, down] functions in object() class
+
 - properties_object() now inherits the object() class
 
+- name parameter in properties_object() has been renamed to id
+
 - alpha attrtibute to properties_object() is now default False
+
+- name parameter in properties_text() has been renamed to id
 
 - properties_text.reload_text requires self, it does not return a value instead changing texture with self.texture
 
