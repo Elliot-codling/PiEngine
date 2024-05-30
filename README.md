@@ -5,7 +5,7 @@ Our current supported platforms must have Python 3.6 or newer, with Pygame 2.0 o
 
 It is currently supported on Windows, Mac and Linux.
 # <a name="_w2nu3n2sgb6p"></a>Getting Started
-The latest verson of the Engine is: PyEngine_*_0_0
+The latest verson of the Engine is: PyEngine_8_0_0
 
 You can download the preview version for the latest features on the preview branch.
 
