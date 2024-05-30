@@ -1,4 +1,3 @@
-﻿
 # <a name="_9s1lldee4gnh"></a>2D Cross-platform Engine
 This is a feature packed Engine, fully created in Python! PyEngine utilises Pygame to improve the development of creating a fully 2D game. What makes this Engine especially unique is this project is open-source, it can be modified to your desire. Take your games to the next level with PyEngine.
 # <a name="_smdjculjot6f"></a>Supported Platforms
