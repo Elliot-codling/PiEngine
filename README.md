@@ -9,4 +9,4 @@ The latest verson of the Engine is: PyEngine_8_0_0
 
 You can download the preview version for the latest features on the preview branch.
 
-Documentation here:
+The documentation is currently a work in progress and many parts haven't been completed.
