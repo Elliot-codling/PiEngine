@@ -7,6 +7,8 @@ It is currently supported on Windows, Mac and Linux.
 # <a name="_w2nu3n2sgb6p"></a>Getting Started
 The latest verson of the Engine is: PyEngine_8_0_0
 
+To download the latest stable release, head to the "Releases" tab.
+
 You can download the preview version for the latest features on the preview branch.
 
 The documentation is currently a work in progress and many parts haven't been completed.
