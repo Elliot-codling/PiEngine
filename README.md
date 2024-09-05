@@ -1,14 +1,40 @@
-# <a name="_9s1lldee4gnh"></a>2D Cross-platform Engine
-This is a feature packed Engine, fully created in Python! PyEngine utilises Pygame to improve the development of creating a fully 2D game. What makes this Engine especially unique is this project is open-source, it can be modified to your desire. Take your games to the next level with PyEngine.
-# <a name="_smdjculjot6f"></a>Supported Platforms
-Our current supported platforms must have Python 3.6 or newer, with Pygame 2.0 or newer.
+Changes to the preview branch:
 
-It is currently supported on Windows, Mac and Linux.
-# <a name="_w2nu3n2sgb6p"></a>Getting Started
-The latest verson of the Engine is: PyEngine_8_0_0
+- update in event class now takes window
 
-To download the latest stable release, head to the "Releases" tab.
+- "run" and "directory" variables are no longer accessible variables
+- To access the directory use: engine.directory() which will return the location of the application directory
+- To access if the application is running use: window.isRunning()
+- To set the current status of the application use: engine.setRunStatus(status)
+- To find if music is available to play, use: music.isActive() -> Bool
 
-You can download the preview version for the latest features on the preview branch.
+- New class has been created called debug()
+- This should not be accessed directory, these functions are for the engines use not your application
+- All debugging functions from window.update() have been moved to debug() class
+- Added checkMusic() -> Used for the music class only
 
-The documentation is currently a work in progress and many parts haven't been completed.
+- Updated PiEngine Documentation
+
+- PiEngine has been seperated into several files to reduce complexity
+- To import PiEngine type: import PiEngine. This must be done outside of the folder PiEngine
+
+- Added options to save / load varibales
+- Saves to a CSV file called "data.csv"
+- deleteAll() -> Deletes all current keys
+- deleteKey(name) -> Deletes a specific key
+- getVariable(name) -> Returns the value of a key
+- setVariable(name, data) -> Saves a variable with its name and data
+- hasKey(name) -> Returns if a key exists in the database
+- getKyes() -> Returns all current keys in the database
+
+- Added engine.appendForDeletion(object)
+- Added deleteObjects(display) -> display
+- You can add items to a list to be deleted later in the display list
+
+- Updated engine.counter to be an object instead of a variable
+- To define the counter: counter = engine.counter()
+- To update the counter: counter.update()
+- To get the current frames that have passed: counter.frames
+- Updated object.animate so that it works with the new counter() class and the updaed reload texture
+- Updated properties_object.reload_texture()
+- Now takes alpha as an option argument
