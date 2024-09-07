@@ -76,7 +76,6 @@ class window:
 
 #class used for debugging purposes
 class debug:
-
     def pygame():         #pygame debug help
         import sys              #import system files
         #steps on installing pygame / pip onto os
@@ -113,10 +112,11 @@ class debug:
     #debugging the application
     #debug parameters: 1 - layer, 2 - clock, 3 - color
     def application(window, display, debugParameters=[]):
-        global minFPS, maxFPS
+        global minFPS, maxFPS, wait
         layer = debugParameters[0]
         clock = debugParameters[1]
         color = debugParameters[2]
+        interval = debugParameters[3]
         
         #used to reset the fps stats
         keys = pygame.key.get_pressed()
@@ -142,9 +142,12 @@ class debug:
             maxFPS = int(clock.get_fps())
         
         #update the text in for the fps stats
-        minFpsText.reload_text(f"Min FPS: {minFPS}", color, 20)
-        maxFpsText.reload_text(f"Max FPS: {maxFPS}", color, 20)
-        currentFpsText.reload_text(f"FPS: {int(clock.get_fps())}", color, 20)
+        internalTimer.update()
+        if internalTimer.frames >= wait:
+            wait = internalTimer.frames + interval
+            minFpsText.reload_text(f"Min FPS: {minFPS}", color, 20)
+            maxFpsText.reload_text(f"Max FPS: {maxFPS}", color, 20)
+            currentFpsText.reload_text(f"FPS: {int(clock.get_fps())}", color, 20)
 
         #manually draw to the screen
         pygame.draw.rect(window.surface, (0, 0, 0), pygame.Rect(minFpsText.x - 10, minFpsText.y - 10, currentFpsText.x + 80, currentFpsText.y + 10))
@@ -166,9 +169,10 @@ except pygame.error:
 
 # ------------------------------------------------------------------------------------------------------------------------------------------
 #used for config, sets the min and max frames to be out of bounds so that the comparison will overide the values
+internalTimer = counter()
 def initConfig():
-    global minFPS, maxFPS, deletedObjects
-    minFPS, maxFPS = 1000000000, -1
+    global minFPS, maxFPS, deletedObjects, wait
+    minFPS, maxFPS, wait = 1000000000, -1, 0
     deletedObjects = []
 initConfig()
 

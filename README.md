@@ -38,3 +38,6 @@ Changes to the preview branch:
 - Updated object.animate so that it works with the new counter() class and the updaed reload texture
 - Updated properties_object.reload_texture()
 - Now takes alpha as an option argument
+
+- To reduce the performance impact of the debugger, an interval has been added.
+- The interval is the number of frames that is required to pass before updating the text.
