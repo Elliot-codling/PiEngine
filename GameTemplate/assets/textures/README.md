@@ -1,0 +1,1 @@
+Texture asset files are stored here.

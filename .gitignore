@@ -1,2 +1,13 @@
-#Ignore cache files
-/__pycache__
+#Ignore every file - including pycache files
+/*
+__pycache__*
+
+#Except these files
+v!README.md
+!.gitignore
+!LICENSE
+
+
+#Except these folders
+!core/
+!GameTemplate/
