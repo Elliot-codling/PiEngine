@@ -3,11 +3,13 @@
 __pycache__*
 
 #Except these files
-v!README.md
+!README.md
+!__main__.py
 !.gitignore
 !LICENSE
 
 
 #Except these folders
 !core/
-!GameTemplate/
+!src/
+!assets/

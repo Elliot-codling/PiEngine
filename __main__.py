@@ -12,7 +12,4 @@ def main():
 
 # Run if the file name is __main__
 if __name__ == "__main__":
-    import sys, os
-    sys.path.insert(0, f"{os.getcwd()}")    # Get core folder 
-
     main()
