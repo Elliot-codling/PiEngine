@@ -11,16 +11,16 @@ class consoleColors:
     RED = "\033[91m"
     DEFAULT = "\033[39;49m"
 
-def printInfo(content) -> None:
+def printInfo(content: str) -> None:
     print(f"{getDateAndTime()} [{consoleColors.GREEN}INFO{consoleColors.DEFAULT}] {content}")
 
-def printDebugInfo(content) -> None:
+def printDebugInfo(content: str) -> None:
     print(f"{getDateAndTime()} [{consoleColors.MAGENTA}DEBUG{consoleColors.DEFAULT}] {content}")
 
-def printWarningInfo(content) -> None:
+def printWarningInfo(content: str) -> None:
     print(f"{getDateAndTime()} [{consoleColors.YELLOW}WARNING{consoleColors.DEFAULT}] {content}")
 
-def printErrorInfo(content) -> None:
+def printErrorInfo(content: str) -> None:
     print(f"{getDateAndTime()} [{consoleColors.RED}ERROR{consoleColors.DEFAULT}] {content}")
 
 def getDateAndTime() -> str:

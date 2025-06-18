@@ -2,9 +2,10 @@
 # Handles accessing secondary storage to load images or save data
 import csv, pygame
 from .debugHandler import *
+from typing import Union
 
 # Load python image
-def loadImage(path) -> pygame.Surface | None:
+def loadImage(path: str) -> pygame.Surface | None:
     # Try loading the image using a relative path
     try:
         image = pygame.image.load(f"{directoryPath()}/{path}")
@@ -22,17 +23,17 @@ def loadImage(path) -> pygame.Surface | None:
     
 
 # Find current path file the program is located in
-def directoryPath():
+def directoryPath() -> str:
     import os
     return os.getcwd()
 
 # Finds if a file currently exists
-def findFile(name):
+def findFile(name: str) -> bool:
     import os
     return os.path.isfile(name)
 
 # Returns a list of items containing each line in that file
-def readFile():
+def readFile() -> dict:
     dictionary = {}
     with open("data.csv") as csvfile:
         reader = csv.reader(csvfile)
@@ -42,19 +43,19 @@ def readFile():
     return dictionary
 
 # Writes data using a dictionary to a file called "data.csv"
-def writeFile(dictionary):
+def writeFile(dictionary: dict) -> None:
     with open("data.csv", "w") as csvfile:
         writer = csv.writer(csvfile)
         for item in dictionary:
             writer.writerow([item, dictionary.get(item)])
 
 # Creates a csv file called "data.csv"
-def createFile():
+def createFile() -> None:
     with open("data.csv", "w") as csvfile:
         pass
 
 # Create a key in a csv file with a name and its data value
-def setVariable(name, data):
+def setVariable(name: str, data: str) -> None:
     if not findFile("data.csv"):
         createFile()
     
@@ -63,18 +64,18 @@ def setVariable(name, data):
     writeFile(dictionary)
     
 # Gets the value of a key
-def getVariable(name):
+def getVariable(name: str) -> Union[str, None]:
     if not findFile("data.csv"):
         return None
     dictionary = readFile()
     return dictionary.get(name)
 
 # Deletes all keys in the csv file
-def deleteAll():
+def deleteAll() -> None:
     createFile()
 
 # Deletes a specific key in the csv file
-def deleteKey(name):
+def deleteKey(name: str) -> None:
     if not findFile("data.csv"):
         return None
     dictionary = readFile()
@@ -85,9 +86,9 @@ def deleteKey(name):
     writeFile(dictionary)
 
 # Returns a boolean if a key exists
-def hasKey(name):
+def hasKey(name: str) -> None:
     if not findFile("data.csv"):
-        return None
+        return False
     dictionary = readFile()
     if name in dictionary:
         return True
@@ -95,7 +96,7 @@ def hasKey(name):
         return False
 
 # Returns a list of all current keys   
-def getKeys():
+def getKeys() -> list:
     if not findFile("data.csv"):
         return None
     dictionary = readFile()

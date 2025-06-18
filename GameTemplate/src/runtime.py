@@ -3,7 +3,7 @@
 
 class runtime:
     # === Create runtime and define the window using parameters provided ===
-    def __init__(self, name, width, height, color = (0, 0, 0)):
+    def __init__(self, name: str, width: int, height: int, color = (0, 0, 0)) -> "runtime":
         import core as engine
         import pygame
 
@@ -20,7 +20,7 @@ class runtime:
         
         
     # === Update control flow ===
-    def update(self):
+    def update(self) -> None:
         from .mainScript import fixedUpdate, update
         while self.m_window.isRunning():
             self.m_clock.tick(self.m_window.getTargetFramerate())
@@ -42,7 +42,7 @@ class runtime:
             update(self.m_window)
 
     # === End program ===
-    def end(self):
+    def end(self) -> None:
         #End the script
         from .mainScript import end
         end()

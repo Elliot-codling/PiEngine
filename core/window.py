@@ -8,10 +8,11 @@ from .input import *
 from .ssp import *
 from .audio import *
 from .debugHandler import *
+from typing import Union
 
 class window(windowEvents, windowInput):
     # === Manage and define the window functions ===
-    def __init__(self, name, width, height, clock, color = (0, 0, 0)):
+    def __init__(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0)) -> "window":
         import pygame
         # Create window
         self.m_clock = clock
@@ -27,25 +28,25 @@ class window(windowEvents, windowInput):
         self.m_color = color
         self.m_windowOpen = True
 
-    def isRunning(self):
+    def isRunning(self) -> bool:
         return self.m_windowOpen
     
-    def stopRunning(self):
+    def stopRunning(self) -> None:
         self.m_windowOpen = False
 
 
     # === Framerate ===
-    def setTargetFramerate(self, targetFPS: int):
+    def setTargetFramerate(self, targetFPS: int) -> None:
         self.m_targetFramerate = targetFPS
 
-    def getTargetFramerate(self):
+    def getTargetFramerate(self) -> int:
         return self.m_targetFramerate
     
-    def getFramerate(self):
+    def getFramerate(self) -> float:
         return self.m_clock.get_fps()
     
     # === object layers ===
-    def clearLayer(self, layerNumber):
+    def clearLayer(self, layerNumber: int) -> None:
         for object in self.m_renderQueue:
             if object.getLayer() == layerNumber:
                 self.popFromQueue(object)
@@ -53,23 +54,23 @@ class window(windowEvents, windowInput):
 
 
     # === Render queue ===
-    def pushToQueue(self, object: spriteObject | textObject):
+    def pushToQueue(self, object: Union[spriteObject, textObject]) -> None:
         if object.isInitialised():
             self.m_renderQueue.append(object)
             return
         printWarningInfo(f"Object: '{object.getID()}' not added to the render queue. Object is not initialised")
 
-    def popFromQueue(self, object):
+    def popFromQueue(self, object: Union[spriteObject, textObject]) -> None:
         self.m_renderQueue.remove(object)
 
-    def getQueue(self):
+    def getQueue(self) -> list:
         return self.m_renderQueue
 
-    def sortQueue(self):
+    def sortQueue(self) -> None:
         self.m_renderQueue.sort(key = lambda object: object.getLayer(), reverse=True)
 
     # === Render Objects ===
-    def renderObjects(self):
+    def renderObjects(self) -> None:
         self.m_surface.fill(self.m_color)
 
         self.sortQueue()

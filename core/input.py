@@ -1,12 +1,14 @@
 import pygame
 from .sprite import *
 from .vector import *
+from .debugHandler import *
+from typing import Union
 
 class windowEvents:
-    def __init__(self):
+    def __init__(self) -> "windowEvents":
         self.m_currentEvents = []
 
-    def updateEvents(self):
+    def updateEvents(self) -> None:
         # Update events that have occured in the frame
         events = pygame.event.get()
 
@@ -14,7 +16,7 @@ class windowEvents:
         for event in events:
             self.m_currentEvents.append(event.type)
     
-    def getEvent(self, eventType: str):
+    def getEvent(self, eventType: str) -> bool:
         # Return a bool if the specified eventType matches what has happened in a frame
         try:
             eventTriggered = getattr(pygame, eventType)
@@ -28,20 +30,21 @@ class windowEvents:
         return False
 
 class windowInput: 
-    def getKey(self, keyType: str):
+    def getKey(self, keyType: str) -> bool:
         # Return a bool if the key has been pressed
         keys = pygame.key.get_pressed()
         try:
             keyPressed = getattr(pygame, f"K_{keyType}")
         except AttributeError:
+            printWarningInfo(f"Key name: '{keyType}' could not be found")
             return False 
 
         return keys[keyPressed]
     
-    def getMousePosition(self, ):
+    def getMousePosition(self) -> vector2i:
         return vector2i(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
     
-    def getMouseCollisionByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0):
+    def getMouseCollisionByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0) -> bool:
         if mouseX == 0  or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
@@ -57,7 +60,7 @@ class windowInput:
         else:
             return True
         
-    def getMouseCollisionByID(self, renderQueue: list, objectID: str, mouseX = 0, mouseY = 0):
+    def getMouseCollisionByID(self, renderQueue: list, objectID: str, mouseX = 0, mouseY = 0) -> Union[spriteObject, textObject, None]:
         if mouseX == 0  or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]

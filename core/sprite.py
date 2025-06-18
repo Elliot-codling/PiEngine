@@ -3,9 +3,11 @@
 import pygame
 from .vector import *
 from .sharedObjectClass import *
+from .text import *
 from .window import *
 from .ssp import loadImage
 from .debugHandler import *
+from typing import Union
 
 # TODO LIST:
 # - Add animation:
@@ -31,61 +33,61 @@ from .debugHandler import *
 # === Transform the object ===
 class transform:
     # === Origin ===
-    def setOrigin(self, position: vector2i):
+    def setOrigin(self, position: vector2i) -> None:
         self.m_origin = position
 
     # === Rotation (clockwise) ===
-    def setAngle(self, angle: float):        
+    def setAngle(self, angle: float) -> None:
         self.m_texture = pygame.transform.rotate(self.c_texture, -angle)
         self.m_rotation = angle
 
         self.m_mask = pygame.mask.from_surface(self.m_texture)
     
-    def incrementAngle(self, angle: float):
+    def incrementAngle(self, angle: float) -> None:
         self.m_rotation += angle
         self.m_texture = pygame.transform.rotate(self.c_texture, -self.m_rotation)
 
         self.m_mask = pygame.mask.from_surface(self.m_texture)
     
     # === Transform positions ===
-    def setPosition(self, position: vector2f):
+    def setPosition(self, position: vector2f) -> None:
         self.m_position = position
         
-    def incrementPosition(self, position: vector2f):
+    def incrementPosition(self, position: vector2f) -> None:
         self.m_position += position
 
-    def getPosition(self):
+    def getPosition(self) -> None:
         return self.m_position
     
     # === Sizes ===
-    def setSize(self, size: vector2i):
+    def setSize(self, size: vector2i) -> None:
         self.m_size = size
         self.m_texture = pygame.transform.scale(self.m_texture, (size.x, size.y))
         self.c_texture = pygame.transform.scale(self.c_texture, (size.x, size.y))
         
-    def getSize(self):    
+    def getSize(self) -> vector2f:
         return vector2f(self.m_texture.get_rect().right, self.m_texture.get_rect().bottom)
 
 
 # === Flags return a true or false statement ===
 class flags(transform):
     # === Check position of object compared to predefinied border ===
-    def leftBorder(self, relativePosition: vector2i, borderLeft: int):
+    def leftBorder(self, relativePosition: vector2i, borderLeft: int) -> bool:
         return relativePosition.x >= borderLeft
     
-    def rightBorder(self, relativePosition: vector2i, borderRight: int):
+    def rightBorder(self, relativePosition: vector2i, borderRight: int) -> bool:
         return relativePosition.x <= borderRight
     
-    def topBorder(self, relativePosition: vector2i, borderTop: int):
+    def topBorder(self, relativePosition: vector2i, borderTop: int) -> bool:
         return relativePosition.y >= borderTop
     
-    def bottomBorder(self, relativePosition: vector2i, borderBottom: int):
+    def bottomBorder(self, relativePosition: vector2i, borderBottom: int) -> bool:
         return relativePosition.y <= borderBottom
     
     # === Collision boxes ===
     # Return true if the current object collides with the object passed
     # Else return false
-    def collideBoxByObject(self, object: "spriteObject"):        
+    def collideBoxByObject(self, object: "spriteObject") -> bool:        
         if not (self.getPosition().x <= object.getPosition().x + object.getSize().x):
             return False
         
@@ -103,7 +105,7 @@ class flags(transform):
     # Go through the list and find matching IDs
     # Some objects may have the same ID, so the whole list is checked
     # Return the collided object if it is found within the current object
-    def collideBoxByID(self, renderQueue: list, objectID: str):
+    def collideBoxByID(self, renderQueue: list, objectID: str) -> Union["spriteObject", None]:
         matchFound = False
 
         for object in renderQueue:
@@ -115,7 +117,7 @@ class flags(transform):
             
         return None
     
-    def collideMaskByObject(self, object: "spriteObject"):
+    def collideMaskByObject(self, object: "spriteObject") -> bool:
         if self.m_mask == None or object.m_mask == None:
             return False
         
@@ -125,7 +127,7 @@ class flags(transform):
             return True
         return False
     
-    def collideMaskByID(self, renderQueue: list, objectID: str):
+    def collideMaskByID(self, renderQueue: list, objectID: str) -> Union["spriteObject", None]:
         matchFound = False
 
         if object in renderQueue:
@@ -140,7 +142,7 @@ class flags(transform):
 
 class spriteObject(flags, transform, sharedData):
     # === Define spriteObject ===
-    def __init__(self, objectID: str, texture, position: vector2f, size: vector2i, alpha = False, layer = 0):
+    def __init__(self, objectID: str, texture: Union[str, pygame.Surface], position: vector2f, size: vector2i, alpha = False, layer = 0) -> "spriteObject":
         super().__init__()
         self.setID(objectID)
         # m_texture = current texture to render
@@ -186,13 +188,19 @@ class spriteObject(flags, transform, sharedData):
         self.initialiseObject()
 
     # === Replace texture ===
-    def replaceTexture(self, newTexture, size: vector2f, alpha = False):
+    def replaceTexture(self, texture: Union[str, pygame.Surface], size: vector2f, alpha = False) -> None:
         # Check if 'newTexture' is a string or a loaded texture
-        if type(newTexture) == str:
-            self.m_texture = pygame.image.load(newTexture)
+        if type(texture) == str:
+            newTexture = loadImage(texture)             
+        else:
+            newTexture = texture
+
+        # Return and do not apply new texture if it could not be loaded
+        if newTexture == None:
+            return
         else:
             self.m_texture = newTexture
-
+        
         self.m_texture = pygame.transform.scale(self.m_texture, (size.x, size.y))
         if not alpha:
             self.m_texture = self.m_texture.convert()    
@@ -200,5 +208,5 @@ class spriteObject(flags, transform, sharedData):
         self.m_mask = pygame.mask.from_surface(self.m_texture)
 
     # === Render Object ===
-    def render(self, surface):
+    def render(self, surface: pygame.surface) -> None:
         surface.blit(self.m_texture, [self.m_position.x, self.m_position.y])
