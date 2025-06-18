@@ -7,6 +7,7 @@ pygame.font.init()
 class textObject(sharedData):
     # === Define text object ===
     def __init__(self, objectID, message, position: vector2f, fontSize, textColor = (255, 255, 255), layer = 0):
+        super().__init__()
         self.setID(objectID)
         self.m_text = message
         self.m_position = position

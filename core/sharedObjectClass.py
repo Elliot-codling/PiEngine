@@ -1,6 +1,10 @@
 # Sprites and text have similar functions
 # This class prevents functions from being dulicated in code
 class sharedData:
+    # === Set m_initialised as false ===
+    def __init__(self):
+        self.m_initialised = False
+
     # === Set functions ===
     def setID(self, objectID):
         self.m_objectID = objectID

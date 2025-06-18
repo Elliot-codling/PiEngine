@@ -1,18 +1,34 @@
 # Secondary storage process file
 # Handles accessing secondary storage to load images or save data
-import os, csv
+import csv, pygame
+from .debugHandler import *
 
 # Load python image
-def loadImage(file):
-    import pygame
-    return pygame.image.load(file)
+def loadImage(path) -> pygame.Surface | None:
+    # Try loading the image using a relative path
+    try:
+        image = pygame.image.load(f"{directoryPath()}/{path}")
+        return image
+    except FileNotFoundError:
+        pass
+    # Else try the absolute path
+    try:
+        image = pygame.image.load(path)
+        return image
+    except FileNotFoundError:
+        # Else return None if texture could not load
+        printWarningInfo(f"Could not load file: {path}. Unable to locate file")
+        return None
+    
 
 # Find current path file the program is located in
-def findCurrentPath():
+def directoryPath():
+    import os
     return os.getcwd()
 
 # Finds if a file currently exists
 def findFile(name):
+    import os
     return os.path.isfile(name)
 
 # Returns a list of items containing each line in that file

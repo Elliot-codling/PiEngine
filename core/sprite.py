@@ -4,6 +4,8 @@ import pygame
 from .vector import *
 from .sharedObjectClass import *
 from .window import *
+from .ssp import loadImage
+from .debugHandler import *
 
 # TODO LIST:
 # - Add animation:
@@ -139,6 +141,7 @@ class flags(transform):
 class spriteObject(flags, transform, sharedData):
     # === Define spriteObject ===
     def __init__(self, objectID: str, texture, position: vector2f, size: vector2i, alpha = False, layer = 0):
+        super().__init__()
         self.setID(objectID)
         # m_texture = current texture to render
         # c_texture = loaded texture
@@ -146,16 +149,17 @@ class spriteObject(flags, transform, sharedData):
         # c_texture does not change in any other 
         # m_texture is used for render, but can be replaced by rotations etc
         # rotations are based on c_texture but the output it stored to m_texture
-        try:
-            if type(texture) == str:
-                self.m_texture = pygame.image.load(texture)
-                self.c_texture = pygame.image.load(texture)
-            else:
-                self.m_texture = texture
-                self.c_texture = texture
-        except FileNotFoundError:
-            print("Could not load file")    # Create debug handler
-            return
+        
+        if type(texture) == str:
+            self.m_texture = loadImage(texture)
+            self.c_texture = self.m_texture
+        else:
+            self.m_texture = texture
+            self.c_texture = texture
+        
+        if self.m_texture == None or self.c_texture == None:
+            printWarningInfo(f"Sprite Object: '{self.getID()}' is not initialised")
+            return None
         
         self.m_position = position
         self.m_size = size

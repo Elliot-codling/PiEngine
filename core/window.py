@@ -7,6 +7,7 @@ from .vector import *
 from .input import *
 from .ssp import *
 from .audio import *
+from .debugHandler import *
 
 class window(windowEvents, windowInput):
     # === Manage and define the window functions ===
@@ -16,6 +17,7 @@ class window(windowEvents, windowInput):
         self.m_clock = clock
         self.m_targetFramerate = 0
         self.m_surface = pygame.display.set_mode((width, height))
+        printInfo(f"Created Pygame window: '{name}'")
         pygame.display.set_caption(name)
 
         # Create render queues
@@ -51,8 +53,11 @@ class window(windowEvents, windowInput):
 
 
     # === Render queue ===
-    def pushToQueue(self, object):
-        self.m_renderQueue.append(object)
+    def pushToQueue(self, object: spriteObject | textObject):
+        if object.isInitialised():
+            self.m_renderQueue.append(object)
+            return
+        printWarningInfo(f"Object: '{object.getID()}' not added to the render queue. Object is not initialised")
 
     def popFromQueue(self, object):
         self.m_renderQueue.remove(object)

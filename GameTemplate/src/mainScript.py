@@ -1,9 +1,6 @@
 # Mainscript which is where the game runs
 import core as engine
 
-backgroundMusic = engine.music([f"{engine.findCurrentPath()}/GameTemplate/assets/music/menu_start.ogg", f"{engine.findCurrentPath()}/GameTemplate/assets/music/gameplay.ogg"], 0)
-
-
 # Runs only once
 def start(window: engine.window):
     pass
@@ -17,7 +14,7 @@ def fixedUpdate(window: engine.window, deltaTime: float):
     window.updateEvents()
 
     if window.getEvent("QUIT") or window.getKey("ESCAPE"):
-        window.stopRunning()  
+        window.stopRunning()
         
 # Runs once at the end
 def end():
