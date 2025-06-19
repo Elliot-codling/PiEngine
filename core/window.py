@@ -8,12 +8,14 @@ from .input import *
 from .ssp import *
 from .audio import *
 from .debugHandler import *
+from .button import *
 from typing import Union
 
 class window(windowEvents, windowInput):
     # === Manage and define the window functions ===
     def __init__(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0)) -> "window":
-        import pygame
+        import pygame, ctypes
+        ctypes.windll.user32.SetProcessDPIAware()
         # Create window
         self.m_clock = clock
         self.m_targetFramerate = 0
@@ -28,12 +30,19 @@ class window(windowEvents, windowInput):
         self.m_color = color
         self.m_windowOpen = True
 
+    # === Window control ===
     def isRunning(self) -> bool:
         return self.m_windowOpen
     
     def stopRunning(self) -> None:
         self.m_windowOpen = False
 
+    # === Sizes ===
+    def getWidth(self):
+        return self.m_surface.get_width()
+    
+    def getHeight(self):
+        return self.m_surface.get_height()
 
     # === Framerate ===
     def setTargetFramerate(self, targetFPS: int) -> None:

@@ -56,7 +56,7 @@ class transform:
     def incrementPosition(self, position: vector2f) -> None:
         self.m_position += position
 
-    def getPosition(self) -> None:
+    def getPosition(self) -> vector2f:
         return self.m_position
     
     # === Sizes ===
@@ -65,8 +65,8 @@ class transform:
         self.m_texture = pygame.transform.scale(self.m_texture, (size.x, size.y))
         self.c_texture = pygame.transform.scale(self.c_texture, (size.x, size.y))
         
-    def getSize(self) -> vector2f:
-        return vector2f(self.m_texture.get_rect().right, self.m_texture.get_rect().bottom)
+    def getSize(self) -> vector2i:
+        return vector2i(self.m_texture.get_rect().right, self.m_texture.get_rect().bottom)
 
 
 # === Flags return a true or false statement ===
@@ -179,11 +179,12 @@ class spriteObject(flags, transform, sharedData):
         # Remove alpha of texture if alpha is false
         if not alpha:
             self.m_texture = self.m_texture.convert()
+            self.c_texture = self.c_texture.convert()
             self.m_mask = None
         else:
             self.m_texture = self.m_texture.convert_alpha()
+            self.c_texture = self.c_texture.convert_alpha()
             self.m_mask = pygame.mask.from_surface(self.m_texture)
-
         
         self.initialiseObject()
 

@@ -32,11 +32,11 @@ class runtime:
                 pass
             
             # If the frametime is over 16ms then run fixedUpdate
-            if self.m_timeElapsed >= self.m_fixedTime:
+            while self.m_timeElapsed >= 0:
                 deltaTime = self.m_timeElapsed / self.m_fixedTime
                 fixedUpdate(self.m_window, deltaTime)
 
-                self.m_timeElapsed = 0
+                self.m_timeElapsed -= self.m_fixedTime
             
             #Update the screen
             update(self.m_window)

@@ -20,8 +20,11 @@ class sfx:
 class music:
     # === Create music track ===
     def __init__(self, musicTrack: list, channelNumber: int) -> "music":
-        # Music track
-        self.m_musicTrack = musicTrack
+        # Preload music sound track into a list
+        self.m_musicTrack = []
+        for music in musicTrack:
+            self.m_musicTrack.append(pygame.mixer.Sound(music))
+            
         # Channel number
         self.m_channelNumber = channelNumber
         # Keeps track of which music piece in the track is playing
@@ -34,17 +37,14 @@ class music:
             return 
         pygame.mixer.Channel(self.m_channelNumber).play(pygame.mixer.Sound(self.m_musicTrack[trackNumber]))
 
-    # Loop the sound track
-    # Can be shuffled and tracks can be picked at random
-    def loop(self, shuffle = False) -> None:
-        
+    # Play music track, can be shuffled by picking random int
+    def playLoop(self, shuffle = False) -> None:
         if pygame.mixer.Channel(self.m_channelNumber).get_busy():
             return
         if shuffle:
             self.m_currentTrackNumber = random.randint(0, len(self.m_musicTrack) - 1)
 
-        # Play music if the channel is not busy
-        pygame.mixer.Channel(self.m_channelNumber).play(pygame.mixer.Sound(self.m_musicTrack[self.m_currentTrackNumber]))
+        pygame.mixer.Channel(self.m_channelNumber).play(self.m_musicTrack[self.m_currentTrackNumber])
 
         # Increase the track number
         if self.m_currentTrackNumber == len(self.m_musicTrack) - 1:

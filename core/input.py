@@ -29,6 +29,7 @@ class windowEvents:
             
         return False
 
+# TODO: Add comments
 class windowInput: 
     def getKey(self, keyType: str) -> bool:
         # Return a bool if the key has been pressed
@@ -43,6 +44,20 @@ class windowInput:
     
     def getMousePosition(self) -> vector2i:
         return vector2i(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
+    
+    def mouseButtonClicked(self, button: str) -> bool:
+        if button == "LEFT":
+            return pygame.mouse.get_pressed()[0]
+        
+        elif button == "RIGHT":
+            return pygame.mouse.get_pressed()[1]
+        
+        elif button == "MIDDLE":
+            return pygame.mouse.get_pressed()[2]
+        
+        printWarningInfo(f"Mouse button name: '{button}' could not be found")
+        return False
+        
     
     def getMouseCollisionByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0) -> bool:
         if mouseX == 0  or mouseY == 0:

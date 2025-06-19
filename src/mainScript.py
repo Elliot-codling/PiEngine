@@ -4,6 +4,7 @@ import core as engine
 # Runs only once
 def start(window: engine.window) -> None:
     pass
+    
 
 # Runs every frame
 def update(window: engine.window) -> None:
@@ -15,7 +16,7 @@ def fixedUpdate(window: engine.window, deltaTime: float) -> None:
 
     if window.getEvent("QUIT") or window.getKey("ESCAPE"):
         window.stopRunning()
-        
+    
 # Runs once at the end
 def end() -> None:
     pass
