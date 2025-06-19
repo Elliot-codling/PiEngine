@@ -24,8 +24,8 @@ However, there are some minimum requirements for Python and Pygame.
 
 ## How to get started
 
-1. Download the latest version of PiEngine by cloning from the 'stable' branch or going to the releases tab to download the project.
-2. Open up '__main__.py' to start the project.
+1. Download the latest version of PiEngine by cloning from the `stable` branch or going to the releases tab to download the project.
+2. Open up `__main__.py` to start the project.
 
 ## Documentation
 
