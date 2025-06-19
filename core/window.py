@@ -14,8 +14,10 @@ from typing import Union
 class window(windowEvents, windowInput):
     # === Manage and define the window functions ===
     def __init__(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0)) -> "window":
-        import pygame, ctypes
-        ctypes.windll.user32.SetProcessDPIAware()
+        import pygame, platform
+        if platform.system().lower() == "windows":
+            import ctypes
+            ctypes.windll.user32.SetProcessDPIAware()
         # Create window
         self.m_clock = clock
         self.m_targetFramerate = 0
