@@ -3,7 +3,7 @@
 import pygame
 from .vector import *
 from .sharedObjectClass import *
-from .text import *
+from .textObject import *
 from .window import *
 from .ssp import loadImage
 from .debugHandler import *
@@ -69,7 +69,8 @@ class transform:
         return vector2i(self.m_texture.get_rect().right, self.m_texture.get_rect().bottom)
 
 
-# === Flags return a true or false statement ===
+# === Flags statements ===
+# Returns a bool
 class flags(transform):
     # === Check position of object compared to predefinied border ===
     def leftBorder(self, relativePosition: vector2i, borderLeft: int) -> bool:
@@ -106,17 +107,17 @@ class flags(transform):
     # Some objects may have the same ID, so the whole list is checked
     # Return the collided object if it is found within the current object
     def collideBoxByID(self, renderQueue: list, objectID: str) -> Union["spriteObject", None]:
-        matchFound = False
-
         for object in renderQueue:
-            if object.getID() == objectID:
-                matchFound = self.collideBoxByObject(object)
+            if object.getID() != objectID:
+                continue
 
-            if matchFound:
+            if self.collideBoxByObject(object):
                 return object
             
         return None
     
+    # Same as 'collideBoxByObject' however it uses a mask instead for more accurate collision
+    # Returns a bool if the object is collided with
     def collideMaskByObject(self, object: "spriteObject") -> bool:
         if self.m_mask == None or object.m_mask == None:
             return False
@@ -127,14 +128,15 @@ class flags(transform):
             return True
         return False
     
+    # Same as 'collideBoxByID' however it uses a mask instead for more accurate collision
+    # Returns the object if it has been collided with
+    # Else return 'None'
     def collideMaskByID(self, renderQueue: list, objectID: str) -> Union["spriteObject", None]:
-        matchFound = False
-
-        if object in renderQueue:
-            if object.getID() == objectID:
-                matchFound = self.collideMaskByObject(object)
-            
-            if matchFound:
+        for object in renderQueue:
+            if object.getID() != objectID:
+                continue
+                        
+            if self.collideMaskByObject(object):
                 return object
         return None
 

@@ -2,7 +2,7 @@
 
 # Import required files - global
 from .sprite import *
-from .text import *
+from .textObject import *
 from .vector import *
 from .input import *
 from .ssp import *
@@ -11,9 +11,24 @@ from .debugHandler import *
 from .button import *
 from typing import Union
 
+# Goes through a list of strings which it tries to find an equivalent value for
+# For example: 'SCALED' => 'pygame.SCALED'
+# 'pygame.SCALED' + 'pygame.RESIZABLE' = 528, therefore it returns the int 528
+# Any values it could not find an attribute for it throws a warning and then returns 0
+def getAttributes(flags: list) -> int:
+    attributeInt = 0
+    for flag in flags:
+        try:
+            attributeInt += getattr(pygame, flag)
+        except AttributeError:
+            printWarningInfo(f"Could not find attribute: '{flag}'")
+            return 0
+        
+    return attributeInt
+
 class window(windowEvents, windowInput):
     # === Manage and define the window functions ===
-    def __init__(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0)) -> "window":
+    def __init__(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0), flags = [], vsync = False) -> "window":
         import pygame, platform
         if platform.system().lower() == "windows":
             import ctypes
@@ -21,7 +36,15 @@ class window(windowEvents, windowInput):
         # Create window
         self.m_clock = clock
         self.m_targetFramerate = 0
-        self.m_surface = pygame.display.set_mode((width, height))
+
+        # Enable vsync if the bool is set. 'SCALED' flag is required to enable this feature
+        # If user types, 'SCALED' it will be converted to 'pygame.SCALED'     
+        if vsync:
+            self.m_surface = pygame.display.set_mode((width, height), getAttributes(flags), vsync = 1)
+        else:
+            self.m_surface = pygame.display.set_mode((width, height), getAttributes(flags))
+
+        # Output to log
         printInfo(f"Created Pygame window: '{name}'")
         pygame.display.set_caption(name)
 

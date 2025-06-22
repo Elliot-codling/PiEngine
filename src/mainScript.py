@@ -1,17 +1,16 @@
 # Mainscript which is where the game runs
-import core as engine
+import core as system
 
 # Runs only once
-def start(window: engine.window) -> None:
+def start(window: system.window) -> None:
     pass
-    
 
 # Runs every frame
-def update(window: engine.window) -> None:
+def update(window: system.window) -> None:
     window.renderObjects()
 
 # Runs at 60fps (16.666... ms)
-def fixedUpdate(window: engine.window, deltaTime: float) -> None:
+def fixedUpdate(window: system.window, deltaTime: float) -> None:
     window.updateEvents()
 
     if window.getEvent("QUIT") or window.getKey("ESCAPE"):

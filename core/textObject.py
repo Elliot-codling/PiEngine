@@ -1,7 +1,6 @@
 import pygame
 from .vector import *
 from .sharedObjectClass import *
-
 # Initialise font
 pygame.font.init()
 

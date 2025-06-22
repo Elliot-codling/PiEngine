@@ -1,8 +1,8 @@
 # Starts the program if python3 ./GameTemplate is called
 def main():
     # Create runtime
-    from src import runtime as engine
-    runtimeWindow = engine.runtime("Pygame Window", 1280, 720)
+    from src import runtime as system
+    runtimeWindow = system.runtime("Pygame Window", 1280, 720, (0, 0, 0))
 
     # Call the update function
     runtimeWindow.update()
