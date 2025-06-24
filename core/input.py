@@ -67,8 +67,8 @@ class windowInput:
     # Return a bool if the mouse has hit an object
     # Object passed into function
     # Uses axies aligned collision
-    def getMouseCollisionByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0) -> bool:
-        if mouseX == 0  or mouseY == 0:
+    def mouseCollideBoxByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0) -> bool:
+        if mouseX == 0 or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
         
@@ -85,8 +85,8 @@ class windowInput:
     
     # Return an object if the mouse has hit an object based on the ID
     # If not it will return 'None'
-    def getMouseCollisionByID(self, renderQueue: list, objectID: str, mouseX = 0, mouseY = 0) -> Union[spriteObject, textObject, None]:
-        if mouseX == 0  or mouseY == 0:
+    def mouseCollideBoxByID(self, renderQueue: list, objectID: str, mouseX = 0, mouseY = 0) -> Union[spriteObject, textObject, None]:
+        if mouseX == 0 or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
         
@@ -95,7 +95,40 @@ class windowInput:
             if object.getID() != objectID:
                 continue
 
-            if self.getMouseCollisionByObject(object, mouseX, mouseY):
+            if self.mouseCollideBoxByObject(object, mouseX, mouseY):
                 return object
             
         return None
+    
+    # Return a bool if the mouse has hit an object with a mask
+    def mouseCollideMaskByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0) -> bool:
+        if mouseX == 0 or mouseY == 0:
+            mouseX = pygame.mouse.get_pos()[0]
+            mouseY = pygame.mouse.get_pos()[1]
+
+        # Create temporary task
+        tempMask = pygame.Mask((1, 1), fill=True)
+
+        # Calculate offset
+        offsetX = object.getPosition().x - mouseX
+        offsetY = object.getPosition().y - mouseY
+
+        # Return if the object mask is overlapping the tempMask 
+        return tempMask.overlap(object.m_mask, (offsetX, offsetY)) != None
+    
+    def mouseCollideMaskByID(self, renderQueue: list, objectID: str, mouseX = 0, mouseY = 0):
+        if mouseX == 0 or mouseY == 0:
+            mouseX = pygame.mouse.get_pos()[0]
+            mouseY = pygame.mouse.get_pos()[1]
+
+        # Return if a collision is found with the specified ID
+        for object in renderQueue:
+            if object.getID() != objectID:
+                continue
+
+            if self.mouseCollideMaskByObject(object, mouseX, mouseY):
+                return object
+            
+        return None
+
+

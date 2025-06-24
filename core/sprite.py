@@ -74,16 +74,16 @@ class transform:
 class flags(transform):
     # === Check position of object compared to predefinied border ===
     def leftBorder(self, relativePosition: vector2i, borderLeft: int) -> bool:
-        return relativePosition.x >= borderLeft
+        return relativePosition.x <= borderLeft
     
     def rightBorder(self, relativePosition: vector2i, borderRight: int) -> bool:
-        return relativePosition.x <= borderRight
+        return relativePosition.x >= borderRight
     
     def topBorder(self, relativePosition: vector2i, borderTop: int) -> bool:
-        return relativePosition.y >= borderTop
+        return relativePosition.y <= borderTop
     
     def bottomBorder(self, relativePosition: vector2i, borderBottom: int) -> bool:
-        return relativePosition.y <= borderBottom
+        return relativePosition.y >= borderBottom
     
     # === Collision boxes ===
     # Return true if the current object collides with the object passed
@@ -124,9 +124,7 @@ class flags(transform):
         
         offsetX = object.getPosition().x - self.getPosition().x
         offsetY = object.getPosition().y - self.getPosition().y
-        if self.m_mask.overlap(object.m_mask, (offsetX, offsetY)) != None:
-            return True
-        return False
+        return self.m_mask.overlap(object.m_mask, (offsetX, offsetY)) != None
     
     # Same as 'collideBoxByID' however it uses a mask instead for more accurate collision
     # Returns the object if it has been collided with

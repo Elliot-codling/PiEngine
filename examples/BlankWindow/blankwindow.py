@@ -3,7 +3,7 @@ import core as system
 
 # Runs only once
 def start(window: system.window) -> None:
-    pass
+    window.setTargetFramerate(60)
 
 # Runs every frame
 def update(window: system.window) -> None:
