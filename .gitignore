@@ -5,11 +5,12 @@ __pycache__*
 #Except these files
 !README.md
 !__main__.py
+!runtime.py
 !.gitignore
 !LICENSE
-
 
 #Except these folders
 !core/
 !src/
 !assets/
+!examples/

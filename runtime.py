@@ -3,9 +3,9 @@
 
 class runtime:
     # === Create runtime and define the window using parameters provided ===
-    def __init__(self, name: str, width: int, height: int, color = (0, 0, 0), flags = [], vsync = False) -> "runtime":
+    def __init__(self, mainDirectory: str, name: str, width: int, height: int, color = (0, 0, 0), flags = [], vsync = False) -> "runtime":
         import core as system
-        import pygame
+        import pygame, importlib
 
         self.m_clock = pygame.time.Clock()
         self.m_window = system.window(name, width, height, self.m_clock, color, flags, vsync)
@@ -14,14 +14,13 @@ class runtime:
         self.m_timeElapsed = 0
         self.m_fixedTime = 1 / 60
         
-        # Start the script      
-        from .mainScript import start  
-        start(self.m_window)
+        # Start the script 
+        self.m_module = importlib.import_module(mainDirectory)     
+        self.m_module.start(self.m_window)
         
         
     # === Update control flow ===
     def update(self) -> None:
-        from .mainScript import fixedUpdate, update
         while self.m_window.isRunning():
             self.m_clock.tick(self.m_window.getTargetFramerate())
             
@@ -34,16 +33,15 @@ class runtime:
             # If the frametime is over 16ms then run fixedUpdate
             while self.m_timeElapsed >= 0:
                 deltaTime = self.m_timeElapsed / self.m_fixedTime
-                fixedUpdate(self.m_window, deltaTime)
+                self.m_module.fixedUpdate(self.m_window, deltaTime)
 
                 self.m_timeElapsed -= self.m_fixedTime
             
             #Update the screen
-            update(self.m_window)
+            self.m_module.update(self.m_window)
 
     # === End program ===
     def end(self) -> None:
         #End the script
-        from .mainScript import end
-        end()
+        self.m_module.end()
 
