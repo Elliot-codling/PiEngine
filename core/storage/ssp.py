@@ -1,7 +1,7 @@
 # Secondary storage process file
 # Handles accessing secondary storage to load images or save data
 import csv, pygame
-from .debugHandler import *
+from ..log.Logger import *
 from typing import Union
 
 # Load python image

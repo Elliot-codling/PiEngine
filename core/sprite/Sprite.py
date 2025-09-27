@@ -1,12 +1,11 @@
 # Sprite file used to handle sprites
 
 import pygame
-from .vector import *
-from .sharedObjectClass import *
-from .textObject import *
-from .window import *
-from .ssp import loadImage
-from .debugHandler import *
+from ..vector import *
+from ..sharedObjectClass.SharedObjectClass import *
+from ..window.Application import *
+from ..storage.ssp import loadImage 
+from ..log.Logger import *
 from typing import Union
 
 # TODO LIST:
@@ -140,9 +139,9 @@ class flags(transform):
 
     
 
-class spriteObject(flags, transform, sharedData):
+class Sprite(flags, transform, SharedData):
     # === Define spriteObject ===
-    def __init__(self, objectID: str, texture: Union[str, pygame.Surface], position: vector2f, size: vector2i, alpha = False, layer = 0) -> "spriteObject":
+    def __init__(self, objectID: str, texture: Union[str, pygame.Surface], position: vector2f, size: vector2i, alpha = False, layer = 0) -> "Sprite":
         super().__init__()
         self.setID(objectID)
         # m_texture = current texture to render

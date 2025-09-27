@@ -5,17 +5,17 @@
 
 # Import required scripts
 from .sprite import *
-from .textObject import *
+from .text import *
 from .sharedObjectClass import *
 from .vector import *
-from .debugHandler import *
-from . import window as system
+from ..log.Logger import *
+from . import Application as system
 
 # === Transform the object ===
 class transform:
     # === Transform positions ===
     def setPosition(self, position: vector2f) -> None:
-        self.m_textObject.setPosition(position)
+        self.m_text.setPosition(position)
         # Account for the padding size
         self.m_spriteObject.setPosition(position - vector2f(self.m_paddingSize, self.m_paddingSize))
 

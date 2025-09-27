@@ -1,15 +1,17 @@
 # Used to create a pygame window and manager the events for the window
 
 # Import required files - global
-from .sprite import *
-from .textObject import *
-from .vector import *
-from .input import *
-from .ssp import *
-from .audio import *
-from .debugHandler import *
-from .button import *
+#from ..sprite.Sprite import *
+#from ..text.Text import *
+from ..vector import *
+from ..events.WindowEvents import *
+#from ..storage import *
+#from ..audio import *
+from ..log.Logger import *
+from ..window.Renderer import *
+#from ..Button import *
 from typing import Union
+import pygame
 
 # Goes through a list of strings which it tries to find an equivalent value for
 # For example: 'SCALED' => 'pygame.SCALED'
@@ -21,15 +23,19 @@ def getAttributes(flags: list) -> int:
         try:
             attributeInt += getattr(pygame, flag)
         except AttributeError:
-            printWarningInfo(f"Could not find attribute: '{flag}'")
+            Logger.warning(f"Could not find attribute: '{flag}'")
             return 0
         
-    return attributeInt
+    return attributeInt   
 
-class window(windowEvents, windowInput):
+
+class Application(WindowEvents, WindowInput):
     # === Manage and define the window functions ===
-    def __init__(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0), flags = [], vsync = False) -> "window":
-        import pygame, platform
+    def __init__(self) -> None:
+        pass
+
+    def createWindow(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0), flags = [], vsync = False) -> "window":
+        import platform
         if platform.system().lower() == "windows":
             import ctypes
             ctypes.windll.user32.SetProcessDPIAware()
@@ -45,15 +51,14 @@ class window(windowEvents, windowInput):
             self.m_surface = pygame.display.set_mode((width, height), getAttributes(flags))
 
         # Output to log
-        printInfo(f"Created Pygame window: '{name}'")
+        Logger.info(f"Created Pygame window: '{name}'")
         pygame.display.set_caption(name)
-
-        # Create render queues
-        self.m_renderQueue = []
 
         # Define the colour of the display background
         self.m_color = color
         self.m_windowOpen = True
+        self.m_renderer = Renderer()
+        self.m_activeScene = None
 
     # === Window control ===
     def isRunning(self) -> bool:
@@ -78,7 +83,21 @@ class window(windowEvents, windowInput):
     
     def getFramerate(self) -> float:
         return self.m_clock.get_fps()
+    # === Scene control ===
+    def getActiveScene(self):
+        return self.m_activeScene
     
+    def setActiveScene(self, scene: "Scene"):
+        self.m_activeScene = scene
+
+    # === Display control ===
+    def updateBlankDisplay(self):
+        self.m_renderer.renderBlankScene(self.m_surface, self.m_color)
+
+    def updateDisplay(self):
+        self.m_renderer.renderScene(self.m_surface, self.m_color, self.m_activeScene)
+    
+    """
     # === object layers ===
     def clearLayer(self, layerNumber: int) -> None:
         for object in self.m_renderQueue:
@@ -86,33 +105,10 @@ class window(windowEvents, windowInput):
                 self.popFromQueue(object)
         
 
-
+    
     # === Render queue ===
-    def pushToQueue(self, object: Union[spriteObject, textObject]) -> None:
-        if object.isInitialised():
-            self.m_renderQueue.append(object)
-            return
-        printWarningInfo(f"Object: '{object.getID()}' not added to the render queue. Object is not initialised")
-
-    def popFromQueue(self, object: Union[spriteObject, textObject]) -> None:
-        self.m_renderQueue.remove(object)
-
-    def getQueue(self) -> list:
-        return self.m_renderQueue
-
     def sortQueue(self) -> None:
         self.m_renderQueue.sort(key = lambda object: object.getLayer(), reverse=True)
-
-    # === Render Objects ===
-    def renderObjects(self) -> None:
-        self.m_surface.fill(self.m_color)
-
-        self.sortQueue()
-        
-        for object in self.m_renderQueue:   
-            if object.isInitialised():
-                object.render(self.m_surface)
-
-        pygame.display.flip()
-
+    """
+    
     

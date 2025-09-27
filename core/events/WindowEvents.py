@@ -1,11 +1,13 @@
 import pygame
-from .sprite import *
-from .vector import *
-from .debugHandler import *
+#from ..sprite import *
+from ..vector import *
+from ..log.Logger import *
 from typing import Union
 
+print("Hello from events!")
+
 # === Used for window events ===
-class windowEvents:
+class WindowEvents:
     def __init__(self) -> "windowEvents":
         self.m_currentEvents = []
 
@@ -31,7 +33,7 @@ class windowEvents:
         return False
 
 # === Used for keyboard or mouse inputs ===
-class windowInput: 
+class WindowInput: 
     # Find an attribute for a given string and return a bool if it has been pressed
     def getKey(self, keyType: str) -> bool:
         # Return a bool if the key has been pressed
@@ -67,6 +69,7 @@ class windowInput:
     # Return a bool if the mouse has hit an object
     # Object passed into function
     # Uses axies aligned collision
+    """
     def mouseCollideBoxByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0) -> bool:
         if mouseX == 0 or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
@@ -130,5 +133,6 @@ class windowInput:
                 return object
             
         return None
+        """
 
 

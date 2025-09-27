@@ -1,6 +1,6 @@
 import pygame
-from .vector import *
-from .sharedObjectClass import *
+from ..vector import *
+from ..sharedObjectClass import *
 # Initialise font
 pygame.font.init()
 
@@ -17,7 +17,7 @@ class transform:
     def getSize(self) -> vector2i:
         return vector2i(self.m_texture.get_width(), self.m_texture.get_height())
 
-class textObject(sharedData, transform):
+class Text(SharedData, transform):
     # === Define text object ===
     def __init__(self, objectID: str, message: str, position: vector2f, fontSize: int, textColor = (255, 255, 255), layer = 0) -> "textObject":
         super().__init__()
