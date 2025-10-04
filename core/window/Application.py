@@ -1,17 +1,20 @@
 # Used to create a pygame window and manager the events for the window
-
-# Import required files - global
-#from ..sprite.Sprite import *
-#from ..text.Text import *
-from ..vector import *
-from ..events.WindowEvents import *
-#from ..storage import *
-#from ..audio import *
-from ..log.Logger import *
-from ..window.Renderer import *
-#from ..Button import *
+# === External libs ===
 from typing import Union
 import pygame
+# === Inherited classes ===
+from ..events.WindowEvents import *
+# === Internal classes ===
+from ..sprite.Sprite import *
+from ..text.Text import *
+from ..vector.Vector import *
+from ..log.Logger import *
+from ..window.Renderer import *
+
+#from ..storage import *
+#from ..audio import *
+#from ..Button import *
+
 
 # Goes through a list of strings which it tries to find an equivalent value for
 # For example: 'SCALED' => 'pygame.SCALED'
@@ -23,7 +26,7 @@ def getAttributes(flags: list) -> int:
         try:
             attributeInt += getattr(pygame, flag)
         except AttributeError:
-            Logger.warning(f"Could not find attribute: '{flag}'")
+            Logger.warn("window/Application", f"Could not find attribute: '{flag}'")
             return 0
         
     return attributeInt   
@@ -31,11 +34,9 @@ def getAttributes(flags: list) -> int:
 
 class Application(WindowEvents, WindowInput):
     # === Manage and define the window functions ===
-    def __init__(self) -> None:
-        pass
-
-    def createWindow(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0), flags = [], vsync = False) -> "window":
+    def createWindow(self, name: str, width: int, height: int, clock: pygame.time.Clock, color = (0, 0, 0), flags = [], vsync = False) -> None:
         import platform
+        # Correction for windows OS
         if platform.system().lower() == "windows":
             import ctypes
             ctypes.windll.user32.SetProcessDPIAware()
@@ -51,7 +52,7 @@ class Application(WindowEvents, WindowInput):
             self.m_surface = pygame.display.set_mode((width, height), getAttributes(flags))
 
         # Output to log
-        Logger.info(f"Created Pygame window: '{name}'")
+        Logger.info("window/Application", f"Created Pygame window: '{name}'")
         pygame.display.set_caption(name)
 
         # Define the colour of the display background

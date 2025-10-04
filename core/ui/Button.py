@@ -7,9 +7,9 @@
 from .sprite import *
 from .text import *
 from .sharedObjectClass import *
-from .vector import *
+from .vector.vector import *
 from ..log.Logger import *
-from . import Application as system
+from .. import Application as system
 
 # === Transform the object ===
 class transform:

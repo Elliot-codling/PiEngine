@@ -8,7 +8,7 @@
 releaseMode = False
 
 # Define console colours
-class consoleColors:
+class ConsoleColors:
     DEFAULT = "\033[39;49m"
     GREY = "\033[90m" # Trace
     MAGENTA = "\033[95m" # Debug
@@ -17,38 +17,40 @@ class consoleColors:
     RED_WARNING = "\033[91m" # Error
     RED_FATAL = "\033[1;101m" # Fatal
 
+
+# === Logger ===
 class Logger:
     @classmethod
-    def trace(cls, content):
+    def trace(cls, process, content):
         if releaseMode: return
-        print(f"{consoleColors.GREY}{getTimeStamp()} [TRACE] {content} {consoleColors.DEFAULT}")
+        print(f"{ConsoleColors.GREY}{getTimeStamp()} [{process}] [TRACE] {content} {ConsoleColors.DEFAULT}")
 
     @classmethod
-    def debug(cls, content):
+    def debug(cls, process, content):
         if releaseMode: return
-        print(f"{consoleColors.GREY}{getTimeStamp()} [DEBUG] {content} {consoleColors.DEFAULT}")
+        print(f"{ConsoleColors.GREY}{getTimeStamp()} [{process}] [DEBUG] {content} {ConsoleColors.DEFAULT}")
 
     @classmethod
-    def info(cls, content):
+    def info(cls, process, content):
         if releaseMode: return
-        print(f"{consoleColors.GREY}{getTimeStamp()} [INFO] {content} {consoleColors.DEFAULT}")
+        print(f"{ConsoleColors.GREY}{getTimeStamp()} [{process}] [INFO] {content} {ConsoleColors.DEFAULT}")
 
     @classmethod
-    def warning(cls, content):
+    def warn(cls, process, content):
         if releaseMode: return
-        print(f"{consoleColors.GREY}{getTimeStamp()} [WARNING] {content} {consoleColors.DEFAULT}")
+        print(f"{ConsoleColors.GREY}{getTimeStamp()} [{process}] [WARNING] {content} {ConsoleColors.DEFAULT}")
 
     @classmethod
-    def error(cls, content):
+    def error(cls, process, content):
         if releaseMode: return
-        print(f"{consoleColors.GREY}{getTimeStamp()} [ERROR] {content} {consoleColors.DEFAULT}")
+        print(f"{ConsoleColors.GREY}{getTimeStamp()} [{process}] [ERROR] {content} {ConsoleColors.DEFAULT}")
 
     @classmethod
-    def fatal(cls, content):
+    def fatal(cls, process, content):
         if releaseMode: return
-        print(f"{consoleColors.GREY}{getTimeStamp()} [FATAL] {content} {consoleColors.DEFAULT}")
+        print(f"{ConsoleColors.GREY}{getTimeStamp()} [{process}] [FATAL] {content} {ConsoleColors.DEFAULT}")
 
-# Get time stamp
+# === Get time stamp ===
 def getTimeStamp() -> str:
     import datetime
     timeNow = datetime.datetime.now()

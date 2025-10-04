@@ -18,7 +18,7 @@ def loadImage(path: str) -> pygame.Surface | None:
         return image
     except FileNotFoundError:
         # Else return None if texture could not load
-        printWarningInfo(f"Could not load file: {path}. Unable to locate file")
+        Logger.warn("storage/SSP", f"Could not load file: {path}. Unable to locate file")
         return None
     
 
@@ -86,7 +86,7 @@ def deleteKey(name: str) -> None:
     writeFile(dictionary)
 
 # Returns a boolean if a key exists
-def hasKey(name: str) -> None:
+def hasKey(name: str) -> bool:
     if not findFile("data.csv"):
         return False
     dictionary = readFile()
@@ -96,7 +96,7 @@ def hasKey(name: str) -> None:
         return False
 
 # Returns a list of all current keys   
-def getKeys() -> list:
+def getKeys() -> Union[None, list]:
     if not findFile("data.csv"):
         return None
     dictionary = readFile()

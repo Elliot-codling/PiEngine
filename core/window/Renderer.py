@@ -1,9 +1,10 @@
-from ..scene.Scene import *
+# === External libs ===
 import pygame
-class Renderer():
-    def __init__(self):
-        pass
+# === Inherited classes ===
+# === Internal classes ===
+from ..scene.Scene import *
 
+class Renderer():
     def renderBlankScene(self, surface, color):
         surface.fill(color)
         pygame.display.flip()
@@ -17,6 +18,10 @@ class Renderer():
         spriteRenderList = scene.getSpriteRenderQueue()
         
         for object in spriteList:   
+            if object.isInitialised():
+                object.render(surface)
+
+        for object in textList:
             if object.isInitialised():
                 object.render(surface)
         

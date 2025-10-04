@@ -1,14 +1,13 @@
 import pygame
-#from ..sprite import *
-from ..vector import *
+from ..text.Text import *
+from ..sprite.Sprite import *
+from ..vector.Vector import *
 from ..log.Logger import *
 from typing import Union
 
-print("Hello from events!")
-
 # === Used for window events ===
 class WindowEvents:
-    def __init__(self) -> "windowEvents":
+    def __init__(self) -> "WindowEvents":
         self.m_currentEvents = []
 
     def updateEvents(self) -> None:
@@ -42,7 +41,7 @@ class WindowInput:
             keyPressed = getattr(pygame, f"K_{keyType}")
         except AttributeError:
             # Throw a warning if the specified key type has not been found
-            printWarningInfo(f"Key name: '{keyType}' could not be found")
+            Logger.warn("events/WindowEvents", f"Key name: '{keyType}' could not be found")
             return False 
 
         return keys[keyPressed]
@@ -63,14 +62,14 @@ class WindowInput:
             return pygame.mouse.get_pressed()[1]
         
         # Throw a warning if the specified mouse button could not be found
-        printWarningInfo(f"Mouse button name: '{button}' could not be found")
+        Logger.warn("events/WindowEvents", f"Mouse button name: '{button}' could not be found")
         return False
         
     # Return a bool if the mouse has hit an object
     # Object passed into function
     # Uses axies aligned collision
-    """
-    def mouseCollideBoxByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0) -> bool:
+    
+    def mouseCollideBoxByObject(self, object: "Sprite", mouseX = 0, mouseY = 0) -> bool:
         if mouseX == 0 or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
@@ -88,7 +87,7 @@ class WindowInput:
     
     # Return an object if the mouse has hit an object based on the ID
     # If not it will return 'None'
-    def mouseCollideBoxByID(self, renderQueue: list, objectID: str, mouseX = 0, mouseY = 0) -> Union[spriteObject, textObject, None]:
+    def mouseCollideBoxByID(self, renderQueue: list, objectID: str, mouseX = 0, mouseY = 0) -> Union["Sprite", "Text", None]:
         if mouseX == 0 or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
@@ -104,7 +103,7 @@ class WindowInput:
         return None
     
     # Return a bool if the mouse has hit an object with a mask
-    def mouseCollideMaskByObject(self, object: "spriteObject", mouseX = 0, mouseY = 0) -> bool:
+    def mouseCollideMaskByObject(self, object: "Sprite", mouseX = 0, mouseY = 0) -> bool:
         if mouseX == 0 or mouseY == 0:
             mouseX = pygame.mouse.get_pos()[0]
             mouseY = pygame.mouse.get_pos()[1]
@@ -133,6 +132,6 @@ class WindowInput:
                 return object
             
         return None
-        """
+        
 
 

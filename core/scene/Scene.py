@@ -1,6 +1,9 @@
+# === External libs ===
 from typing import Union
 import pygame
-from ..vector import *
+# === Inherited classes ===
+# === Internal classes ===
+from ..vector.Vector import *
 from ..sprite.Sprite import *
 
 class Scene:    

@@ -1,3 +1,6 @@
+# === External libs ===
+# === Inherited classes ===
+# === Internal classes ===
 from ..scene.Scene import *
 
 class SceneManager:

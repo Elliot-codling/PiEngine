@@ -1,12 +1,17 @@
 # Sprite file used to handle sprites
 
+# === External libs ===
 import pygame
-from ..vector import *
+from typing import Union
+# === Inherited classes ===
+from ..sprite.Transform import *
+from ..sprite.Collision import *
+# === Internal classes ===
+from ..vector.Vector import *
 from ..sharedObjectClass.SharedObjectClass import *
 from ..window.Application import *
-from ..storage.ssp import loadImage 
+from ..storage.SSP import loadImage 
 from ..log.Logger import *
-from typing import Union
 
 # TODO LIST:
 # - Add animation:
@@ -29,117 +34,9 @@ from typing import Union
 # When using spriteSheet, the colums and rows will have to be pre-determined in code
 # Possibly the json file at the start could tell the program that its either a spritesheet or seperate images
 
-# === Transform the object ===
-class transform:
-    # === Origin ===
-    def setOrigin(self, position: vector2i) -> None:
-        self.m_origin = position
-
-    # === Rotation (clockwise) ===
-    def setAngle(self, angle: float) -> None:
-        self.m_texture = pygame.transform.rotate(self.c_texture, -angle)
-        self.m_rotation = angle
-
-        self.m_mask = pygame.mask.from_surface(self.m_texture)
-    
-    def incrementAngle(self, angle: float) -> None:
-        self.m_rotation += angle
-        self.m_texture = pygame.transform.rotate(self.c_texture, -self.m_rotation)
-
-        self.m_mask = pygame.mask.from_surface(self.m_texture)
-    
-    # === Transform positions ===
-    def setPosition(self, position: vector2f) -> None:
-        self.m_position = position
-        
-    def incrementPosition(self, position: vector2f) -> None:
-        self.m_position += position
-
-    def getPosition(self) -> vector2f:
-        return self.m_position
-    
-    # === Sizes ===
-    def setSize(self, size: vector2i) -> None:
-        self.m_size = size
-        self.m_texture = pygame.transform.scale(self.m_texture, (size.x, size.y))
-        self.c_texture = pygame.transform.scale(self.c_texture, (size.x, size.y))
-        
-    def getSize(self) -> vector2i:
-        return vector2i(self.m_texture.get_rect().right, self.m_texture.get_rect().bottom)
-
-
-# === Flags statements ===
-# Returns a bool
-class flags(transform):
-    # === Check position of object compared to predefinied border ===
-    def leftBorder(self, relativePosition: vector2i, borderLeft: int) -> bool:
-        return relativePosition.x <= borderLeft
-    
-    def rightBorder(self, relativePosition: vector2i, borderRight: int) -> bool:
-        return relativePosition.x >= borderRight
-    
-    def topBorder(self, relativePosition: vector2i, borderTop: int) -> bool:
-        return relativePosition.y <= borderTop
-    
-    def bottomBorder(self, relativePosition: vector2i, borderBottom: int) -> bool:
-        return relativePosition.y >= borderBottom
-    
-    # === Collision boxes ===
-    # Return true if the current object collides with the object passed
-    # Else return false
-    def collideBoxByObject(self, object: "spriteObject") -> bool:        
-        if not (self.getPosition().x <= object.getPosition().x + object.getSize().x):
-            return False
-        
-        if not (self.getPosition().x + self.getSize().x >= object.getPosition().x):
-            return False
-        
-        if not (self.getPosition().y <= object.getPosition().y + object.getSize().y):
-            return False
-        
-        if not (self.getPosition().y + self.getSize().y >= object.getPosition().y):
-            return False
-        
-        return True
-    
-    # Go through the list and find matching IDs
-    # Some objects may have the same ID, so the whole list is checked
-    # Return the collided object if it is found within the current object
-    def collideBoxByID(self, renderQueue: list, objectID: str) -> Union["spriteObject", None]:
-        for object in renderQueue:
-            if object.getID() != objectID:
-                continue
-
-            if self.collideBoxByObject(object):
-                return object
-            
-        return None
-    
-    # Same as 'collideBoxByObject' however it uses a mask instead for more accurate collision
-    # Returns a bool if the object is collided with
-    def collideMaskByObject(self, object: "spriteObject") -> bool:
-        if self.m_mask == None or object.m_mask == None:
-            return False
-        
-        offsetX = object.getPosition().x - self.getPosition().x
-        offsetY = object.getPosition().y - self.getPosition().y
-        return self.m_mask.overlap(object.m_mask, (offsetX, offsetY)) != None
-    
-    # Same as 'collideBoxByID' however it uses a mask instead for more accurate collision
-    # Returns the object if it has been collided with
-    # Else return 'None'
-    def collideMaskByID(self, renderQueue: list, objectID: str) -> Union["spriteObject", None]:
-        for object in renderQueue:
-            if object.getID() != objectID:
-                continue
-                        
-            if self.collideMaskByObject(object):
-                return object
-        return None
-
     
 
-class Sprite(flags, transform, SharedData):
+class Sprite(Collision, Transform, SharedData):
     # === Define spriteObject ===
     def __init__(self, objectID: str, texture: Union[str, pygame.Surface], position: vector2f, size: vector2i, alpha = False, layer = 0) -> "Sprite":
         super().__init__()
@@ -159,7 +56,7 @@ class Sprite(flags, transform, SharedData):
             self.c_texture = texture
         
         if self.m_texture == None or self.c_texture == None:
-            printWarningInfo(f"Sprite Object: '{self.getID()}' is not initialised")
+            Logger.warn("sprite/Sprite", f"Sprite Object: '{self.getID()}' is not initialised")
             return None
         
         self.m_position = position
